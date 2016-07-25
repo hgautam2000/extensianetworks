@@ -1,0 +1,67 @@
+<script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+<div id="addressBookWidgetDiv" style="width:400px; height:240px;"></div>
+<div id="walletWidgetDiv" style="width:400px; height:240px;"></div>
+
+<script type='text/javascript'>
+    window.onAmazonLoginReady = function () {
+        amazon.Login.setClientId('amzn1.application-oa2-client.126f2098b3a74619a685a56af94196dc');
+    };
+</script>
+
+<script type='text/javascript' src='https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js'></script>
+<script type='text/javascript' src='https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/js/Widgets.js'></script>
+<script type='text/javascript' src='https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/js/Widgets.js'></script>
+<script type='text/javascript' src='https://origin-na.ssl-images-amazon.com/images/G/09/EP/offAmazonPayments/sandbox/prod/lpa/js/Widgets.js'></script>
+
+<script type="text/javascript">
+    new OffAmazonPayments.Widgets.AddressBook({
+        sellerId: 'A3JX4WBCSMO2CQ',
+        onOrderReferenceCreate: function (orderReference) {
+           orderReferenceId = orderReference.getAmazonOrderReferenceId();
+        },
+        onAddressSelect: function () {
+            // do stuff here like recalculate tax and/or shipping
+        },
+        design: {
+            designMode: 'responsive'
+        },
+        onError: function (error) {
+            // your error handling code
+        }
+    }).bind("addressBookWidgetDiv");
+
+    new OffAmazonPayments.Widgets.Wallet({
+        sellerId: 'A3JX4WBCSMO2CQ',
+        onPaymentSelect: function () {
+        },
+        design: {
+            designMode: 'responsive'
+        },
+        onError: function (error) {
+            // your error handling code
+        }
+    }).bind("walletWidgetDiv");
+</script>
+
+<button id="place-order" class="btn btn-lg btn-success">Confirm</button>
+<script type="text/javascript">
+            $(document).ready(function () {
+                function getURLParameter(name, source) {
+                    return decodeURIComponent((new RegExp('[?|&|#]' + name + '=' +
+                            '([^&;]+?)(&|#|;|$)').exec(source) || [, ""])[1].replace(/\+/g, '%20')) || null;
+                }
+                function getParameterByName(name) {
+                    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                            results = regex.exec(location.search);
+                    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+                }
+                var access_token = getParameterByName('access_token');
+                $("#access_token").val(access_token);
+                $("#code_access_token").text(access_token);
+                $("#place-order").click( function () {
+                    window.location = "https://aws2-himmy.c9users.io/html5up-alpha/Confirm.php"
+                });
+            });
+        </script>

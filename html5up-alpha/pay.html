@@ -1,0 +1,76 @@
+<div id="AmazonPayButton"></div>
+
+<script type='text/javascript'>
+    window.onAmazonLoginReady = function () {
+        amazon.Login.setClientId('amzn1.application-oa2-client.126f2098b3a74619a685a56af94196dc');
+        amazon.Login.setUseCookie(true);
+    };
+</script>
+<script type='text/javascript' src='https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js'></script>
+<script type='text/javascript' src='https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/js/Widgets.js'></script>
+<script type='text/javascript' src='https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/js/Widgets.js'></script>
+
+<script type='text/javascript'>
+    var authRequest;
+    OffAmazonPayments.Button("AmazonPayButton", "A3JX4WBCSMO2CQ", {
+        type: "PwA",
+        authorization: function () {
+            loginOptions = { scope: "profile postal_code payments:widget payments:shipping_address", popup: true };
+            authRequest = amazon.Login.authorize(loginOptions, "https://aws2-himmy.c9users.io/html5up-alpha/Pay2.html");
+        },
+        onError: function (error) {
+            // something bad happened
+        }
+    });
+</script>
+
+<script type='text/javascript'>
+    function verifyLoggedIn() {
+        // if you want to display a message.
+        var msgElem = document.getElementById("login-state-msg");
+
+        var options = {
+            scope: "profile postal_code payments:widget payments:shipping_address",
+            popup: true,
+            interactive: 'never'
+        };
+
+        // check if we are logged in
+        authRequest = amazon.Login.authorize (options, function(response) {
+            // this code is executed ASYNCHRONOUSLY
+
+            if ( response.error ) {
+                // USER NOT LOGGED IN
+                console.log("verifyLoggedIn() - SESSION NOT ACTIVE - " + new Date());
+                msgElem.innerHTML = "NOT logged in yet. Click 'Pay with Amazon' or Go to Login screen.";
+            } else {
+                // USER IS LOGGED IN
+                console.log("verifyLoggedIn() - SESSION ACTIVE - " + new Date());
+
+                // optionally, get the profile info
+                console.dir('access_token= ' + response.access_token);
+
+                amazon.Login.retrieveProfile(function (response) {
+                    // Display profile information.
+                    console.dir('CustomerId= ' + response.profile.CustomerId);
+                    console.dir('Name= ' + response.profile.Name);
+                    console.dir('PostalCode= ' + response.profile.PostalCode);
+                    console.dir('PrimaryEmail= ' + response.profile.PrimaryEmail);
+
+                    msgElem.innerHTML = "Hello " + response.profile.Name + "! Just click Pay!";
+                });
+            }
+        });
+    }
+</script>
+
+<a id="Logout">Logout</a>
+
+<script type="text/javascript">
+  document.getElementById('Logout').onclick = function() {
+    amazon.Login.logout();
+};
+</script>
+
+
+
